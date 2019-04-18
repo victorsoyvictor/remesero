@@ -19,7 +19,7 @@ CIF 				= 'CIF: B78561099'
 FORMA_DE_PAGO 		= 'REMESA BANCARIA'
 DOMICILIO_DE_COBRO 	= 'DOMICILIO DE COBRO'
 IVA 				= '21%'
-LUZAPTO 			= 'CONSUMO DE LUZ'
+LUZ					= 'CONSUMO DE LUZ'
 AGUA 				= 'CONSUMO DE AGUA'
 MANCOMUNIDAD 		= 'MANCOMUNIDAD'	
 COMUNIDAD 			= 'COMUNIDAD'
@@ -31,7 +31,9 @@ def generarFacturasPDF(df_1):
 	for i in range(0, len(df_1)):
 		p_factura			= str(df_1.FACTURA.loc[i])
 		p_cliente			= str(df_1.CLIENTE.loc[i])
+		p_saludo			= df_1.SALUDO.loc[i]
 		p_nombre 			= df_1.NOMBRE.loc[i]
+		p_concepto 			= df_1.CONCEPTO.loc[i]
 		p_entidad			= df_1.ENTIDAD.loc[i]
 		p_cuenta			= df_1.CUENTA.loc[i]
 		p_cif				= df_1.CIF.loc[i]
@@ -40,16 +42,15 @@ def generarFacturasPDF(df_1):
 		p_poblacion			= df_1.POBLACION.loc[i]
 		p_codigopostal		= str(df_1.CODIGOPOSTAL.loc[i])
 		p_provincia			= df_1.PROVINCIA.loc[i]
-		p_alquiler			= df_1.ALQUILER.loc[i]
-		p_renta 			= df_1.RENTA.loc[i]
+		p_renta 			= '{:.2f}'.format(df_1.RENTA.loc[i])
 		p_comunidad 		= df_1.COMUNIDAD.loc[i]
 		p_mancomunidad 		= df_1.MANCOMUNIDAD.loc[i]
-		p_luzapto 			= df_1.LUZAPTO.loc[i]
+		p_luz				= df_1.LUZ.loc[i]
 		p_agua 				= df_1.AGUA.loc[i]
 		p_ibi 				= df_1.IBI.loc[i]
-		p_total 			= str(df_1.TOTAL.loc[i])
+		p_total 			= '{:.2f}'.format(df_1.TOTAL.loc[i])
 		p_iva				= str(df_1.IVA.loc[i])
-		p_facturatotal		= str(df_1.TOTALFACTURA.loc[i])
+		p_facturatotal		= '{:.2f}'.format(df_1.TOTALFACTURA.loc[i])
 
 		#creating a pdf in called test.pdf in the current directory
 		pdf = FPDF()
@@ -114,41 +115,40 @@ def generarFacturasPDF(df_1):
 
 		#Itero sobre las 6 columnas de conceptos que pueden estar rellenos o no
 		#RENTA COMUNIDAD MANCOMUNIDAD LUZ AGUA IBI
+		abono = '' # campo por si se provee
 		anch_concepto = 100
 		anch_cargo = 45
-		if df_1.RENTA.loc[i]:
-			#concepto = p_alquiler
-			concepto = 'ALQUILER DE APARTAMENTO TEMP'
+		if p_renta:
+			concepto = p_concepto
 			cargo = p_renta
-			abono = ''
 			pdf.cell(anch_concepto , 10, '%s' % (concepto), 'LR', 0, 'C')
 			pdf.cell(anch_cargo , 10, '%s' % (cargo), 'R', 0, 'C')
 			pdf.cell(0 , 10, abono, 'R', 1, 'C')
-		if df_1.COMUNIDAD.loc[i]:
+		if p_comunidad:
 			concepto = COMUNIDAD
 			cargo = p_comunidad
 			pdf.cell(anch_concepto , 10, '%s' % (concepto), 'LR', 0, 'C')
 			pdf.cell(anch_cargo , 10, '%s' % (cargo), 'R', 0, 'C')
 			pdf.cell(0 , 10, abono, 'R', 1, 'C')
-		if df_1.MANCOMUNIDAD.loc[i]:
+		if p_mancomunidad:
 			concepto = MANCOMUNIDAD
 			cargo = p_mancomunidad
 			pdf.cell(anch_concepto , 10, '%s' % (concepto), 'LR', 0, 'C')
 			pdf.cell(anch_cargo , 10, '%s' % (cargo), 'R', 0, 'C')
 			pdf.cell(0 , 10, abono, 'R', 1, 'C')	
-		if df_1.LUZAPTO.loc[i]:
-			concepto = LUZAPTO
-			cargo = p_luzapto
+		if p_luz:
+			concepto = LUZ
+			cargo = p_luz
 			pdf.cell(anch_concepto , 10, '%s' % (concepto), 'LR', 0, 'C')
 			pdf.cell(anch_cargo , 10, '%s' % (cargo), 'R', 0, 'C')
 			pdf.cell(0 , 10, abono, 'R', 1, 'C') 	
-		if df_1.AGUA.loc[i]:
+		if p_agua:
 			concepto = AGUA
 			cargo = p_agua
 			pdf.cell(anch_concepto , 10, '%s' % (concepto), 'LR', 0, 'C')
 			pdf.cell(anch_cargo , 10, '%s' % (cargo), 'R', 0, 'C')
 			pdf.cell(0 , 10, abono, 'R', 1, 'C')
-		if df_1.IBI.loc[i]:
+		if p_ibi:
 			concepto = IBI
 			cargo = p_ibi
 			pdf.cell(anch_concepto , 10, '%s' % (concepto), 'LR', 0, 'C')
@@ -188,10 +188,10 @@ def generarFacturasPDF(df_1):
 		pdf.cell(80, 10, 'CCC', 0, 1, 'L')
 		pdf.set_font('times', '', 10)
 		pdf.cell(110, 10, p_entidad, 'TBL',0, 'L')
-		pdf.cell(80, 10, p_cuenta[4:15]+'****', 'TBR', 0, 'L')
+		pdf.cell(80, 10, "ES**-****-****-**-******" + p_cuenta[20:], 'TBR', 0, 'L')
 		#print(os.getcwd())
-		pdf.output(os.getcwd()+"/pdf/"+str(df_1.CLIENTE.loc[i])+".pdf", 'F')
-		print("Creado: "+str(df_1.CLIENTE.loc[i])+".pdf")
+		pdf.output(os.getcwd()+ "/pdf/"+ p_cliente + ".pdf", 'F')
+		#print("Creado: " + p_cliente + ".pdf")
 	print('--------------------------')
 	i = i + 1
 	print ('Creadas %s facturas en PDF.' %i)
