@@ -4,7 +4,7 @@ import logging
 
 #read in the .xlsx file just created int to Pandas DataFrame
 def extraerFilasExcel(ficheroExcel, hojaExcel):
-    df_1 = pd.read_excel(io=ficheroExcel, sheet_name=hojaExcel
+    df_1 = pd.read_excel(io=ficheroExcel, sheet_name=hojaExcel)
     #Limpieza de columnas
     df_1.columns = df_1.columns.str.strip().str.replace('/', '_').str.replace(" ","")
     logging.info(df_1.columns)
