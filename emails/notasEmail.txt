@@ -1,0 +1,5 @@
+1) copio y pego en pages desde el email que me manda Proreymon
+2) exporto como rtf
+3) abro con textedit, le añado a mano la imagen del logo y  pongo guardar como html,
+4) edito el tamaño del logo desde un editor de imagenes (vista previa)
+5) lo embebo directamente en correo.py 
