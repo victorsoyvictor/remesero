@@ -1,19 +1,16 @@
 import pandas as pd
 import logging
-import numpy as np
 
 
 #read in the .xlsx file just created int to Pandas DataFrame
 def extraerFilasExcel(ficheroExcel, hojaExcel):
-    df_1 = pd.read_excel(io=ficheroExcel, sheet_name=hojaExcel, header=0)
+    df_1 = pd.read_excel(io=ficheroExcel, sheet_name=hojaExcel
     #Limpieza de columnas
     df_1.columns = df_1.columns.str.strip().str.replace('/', '_').str.replace(" ","")
     logging.info(df_1.columns)
     logging.info(df_1.isnull().any())
     #limpieza de campos vacios porque pandas pone NaN
     df_1 = df_1.fillna('')
-    print(df_1.dtypes)
-    #df_1 = df_1.round(decimals=20)
     for i in range(0, len(df_1)):
         logging.info(df_1.FACTURA.loc[i])
         logging.info(df_1.CLIENTE.loc[i])
