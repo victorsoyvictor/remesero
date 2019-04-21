@@ -32,9 +32,8 @@ password = "uno"
 
 
 def main():
-    contExito = 0
-    contTotal = 0
     contBuzon = 0
+    exitos = 0
     if len(sys.argv) == 4:
         #Si hay email remitente comenzamos, si no salimos.
         if sys.argv[3] and '@' in sys.argv[3]:
@@ -50,23 +49,21 @@ def main():
             username = sys.argv[3]
             for i in range(0, 4): #len(df)
                 if "@" in df.CORRESPONDENCIA.loc[i]:
-                    enviarCorreo(df.CLIENTE.loc[i], df.SALUDO.loc[i], df.CORRESPONDENCIA.loc[i], df.NOMBRE.loc[i])
-                    contExito = contExito + 1
+                    exitos = exitos + enviarCorreo(df.CLIENTE.loc[i], df.SALUDO.loc[i], df.CORRESPONDENCIA.loc[i], df.NOMBRE.loc[i])
                 else:
                     print("Sin e-mail, echar al buzón de: " + df.NOMBRE.loc[i])
                     contBuzon = contBuzon + 1
-                contTotal = contTotal + 1
             print("-------------")
-            print("Total por e-mail : " + str(contExito))
-            print("Total al buzón   : " + str(contBuzon))
-            print("Total facturas   : " + str(contTotal))
+            print("Total facturas : " + str(len(df)))
         else:
-            print("Falta el email del remitente, error.")
+            print("Error en el email del remitente, error.")
     else:
         print ("FALTAN ARGUMENTOS DE ENTRADA (3): <BASE_DE_DATOS> <PESTAÑA> <REMITENTE_EMAIL>")
+    print("Emails enviados: " + str(exitos))
 
 def enviarCorreo(p_num_cliente, p_saludo, p_email, p_nombre):
 
+    conExito = 0
     """
     SMTP Server Information
     1. Gmail.com: smtp.gmail.com:587
@@ -171,10 +168,12 @@ def enviarCorreo(p_num_cliente, p_saludo, p_email, p_nombre):
     try:
         send_mail(username, password, from_addr, p_email, msg)
         print ("Email enviado a: ", p_email)
+        conExito = conExito + 1
     except smtplib.SMTPAuthenticationError:
         print ('SMTPAuthenticationError')
         print ("Email no enviado a: ", p_email)
-
+        conExito = conExito - 1
+    return conExito	
 
 if __name__ == '__main__':
     main()
