@@ -3,6 +3,7 @@ import extractor
 import sys
 import datetime
 import logging
+import pandas as pd
 
 
 logging.basicConfig(filename='log',level=logging.INFO)
@@ -13,8 +14,11 @@ logging.basicConfig(filename='log',level=logging.INFO)
 print("Hello CHARO vamos a hacer remesas very quick!!")
 
 x = datetime.datetime.now()
-logging.info("Formato dd/mm/yyyy =  %s/%s/%s" % (x.day, x.month, x.year))
-
+logging.info(x)
+# La fecha para las remesas es el dia 1 del mes siguiente
+x = datetime.datetime.now() + pd.offsets.MonthBegin(1)
+# Ojo seteo una variable global de otro modulo, no se si es la mejor manera
+plantilla.FECHA = "%s/%s/%s" % (x.day, x.month, x.year)
 #print("__name__ value: ", __name__) -> si se ejecuta por consola vale __main__
 
 

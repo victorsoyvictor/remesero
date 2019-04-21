@@ -1,16 +1,20 @@
-import numpy as np
+#!/usr/bin/env python
+
+"""plantilla.py: usando FPDF y recibiendo la informacion 
+de un dataframe Pandas el script confecciona una factura 
+personalizada para una PYME."""
+
+__author__ = 'Victor Sanchez Alonso'
+__email__ = "victorsoyvicto@gmail.com"
+
 import os
 from fpdf import FPDF
 import extractor
-import datetime
-import math
 
-x = datetime.datetime.now()#print ("Formato dd/mm/yyyy =  %s/%s/%s" % (x.day, x.month, x.year) ) 
+
 
 #Globales
-FECHA 				= "%s/%s/%s" % (datetime.datetime.now().day, 
-	datetime.datetime.now().month,  
-	datetime.datetime.now().year) 
+FECHA 				= ''
 EMPRESA 			= 'PROREYMON S.L.'
 DIR_EMPRESA 		= 'C/ MORERAS 48 BJ'
 DIR_EMPRESA2 		= '28300 ARANJUEZ, MADRID'
