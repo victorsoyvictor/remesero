@@ -23,12 +23,13 @@ plantilla.FECHA = "%s/%s/%s" % (x.day, x.month, x.year)
 
 
 def main():
-    print('Extrayendo información de la base de datos...')
-    df = extractor.extraerFilasExcel(sys.argv[1], sys.argv[2])
-    print('Generando PDFs...')
-    plantilla.generarFacturasPDF(df)
-
-    
+	if len(sys.argv) == 3:
+	    print('Extrayendo información de la base de datos...')
+	    df = extractor.extraerFilasExcel(sys.argv[1], sys.argv[2])
+	    print('Generando PDFs...')
+	    plantilla.generarFacturasPDF(df)
+	else:
+		print ("FALTAN ARGUMENTOS DE ENTRADA (2): <BASE_DE_DATOS> <PESTAÑA>")
 
 if __name__ == '__main__':
     main()
