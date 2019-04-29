@@ -24,10 +24,11 @@ FORMA_DE_PAGO 		= 'REMESA BANCARIA'
 DOMICILIO_DE_COBRO 	= 'DOMICILIO DE COBRO'
 IVA 				= '21%'
 LUZ					= 'CONSUMO DE LUZ'
-AGUA 				= 'CONSUMO DE AGUA'
+AGUA 				= 'A CUENTA CONSUMO DE AGUA'
 MANCOMUNIDAD 		= 'MANCOMUNIDAD'	
 COMUNIDAD 			= 'COMUNIDAD'
 IBI 				= 'IBI'
+IPC 				= 'REVISION IPC'
 
 
 def generarFacturasPDF(df_1):
@@ -47,6 +48,7 @@ def generarFacturasPDF(df_1):
 		p_codigopostal		= df_1.CP.loc[i]
 		p_provincia			= df_1.PROVINCIA.loc[i]
 		p_renta 			= '{:.2f}'.format(df_1.RENTA.loc[i])
+		p_ipc 				= df_1.IPC.loc[i]
 		p_comunidad 		= df_1.COMUNIDAD.loc[i]
 		p_mancomunidad 		= df_1.MANCOMUNIDAD.loc[i]
 		p_luz				= df_1.LUZ.loc[i]
@@ -121,13 +123,20 @@ def generarFacturasPDF(df_1):
 		pdf.set_font('times', '', 10)
 
 		#Itero sobre las 6 columnas de conceptos que pueden estar rellenos o no
-		#RENTA COMUNIDAD MANCOMUNIDAD LUZ AGUA IBI
+		#RENTA IPC COMUNIDAD MANCOMUNIDAD LUZ AGUA IBI
 		abono = '' # campo por si se provee
 		cont_conceptos = 0
 		if p_renta:
 			cont_conceptos = cont_conceptos + 1
 			concepto = p_concepto
 			cargo = p_renta
+			pdf.cell(anch_concepto , 10, '%s' % (concepto), 'LR', 0, 'L')
+			pdf.cell(anch_cargo , 10, '%s' % (cargo), 'R', 0, 'C')
+			pdf.cell(0 , 10, abono, 'R', 1, 'C')
+		if p_ipc:
+			cont_conceptos = cont_conceptos + 1
+			concepto = IPC
+			cargo = '{:.2f}'.format(p_ipc)
 			pdf.cell(anch_concepto , 10, '%s' % (concepto), 'LR', 0, 'L')
 			pdf.cell(anch_cargo , 10, '%s' % (cargo), 'R', 0, 'C')
 			pdf.cell(0 , 10, abono, 'R', 1, 'C')
